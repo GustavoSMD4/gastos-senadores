@@ -39,7 +39,7 @@ dfGastosAno = gastosSenador.groupby('ANO')[['VALOR_REEMBOLSADO']].sum().reset_in
 # # dfAgrupadoFornecedor['VALOR_REEMBOLSADO'] = dfAgrupadoFornecedor['VALOR_REEMBOLSADO'].map(lambda x: locale.currency(x, grouping=True))
 
 
-senador = st.selectbox('Escolher Senador', options=[(i) for i in df['SENADOR'].unique()])
+# senador = st.selectbox('Escolher Senador', options=[(i) for i in df['SENADOR'].unique()])
 
 
 colInicial, colInicial2 = st.columns([10, 0.1])
