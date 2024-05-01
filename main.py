@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly_express as px
-import locale
-
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 st.set_page_config(layout='wide')
 
@@ -52,7 +49,7 @@ col1, col2 = st.columns(2)
 col3, col4 = st.columns(2)
 
 with colInicial:
-    st.header(F'Gastos do Senador {locale.currency(dfGastosAno["VALOR_REEMBOLSADO"].sum(), grouping=True)}')
+    st.header(F'Gastos do Senador {dfGastosAno["VALOR_REEMBOLSADO"].sum()}')
     with st.expander('Todos os gastos'):
         st.table(gastosSenador)
     with st.expander('Agrupado Por despesa'):
