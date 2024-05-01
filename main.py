@@ -31,8 +31,6 @@ gastosSenador.drop(columns=['index', 'CNPJ_CPF', 'MES'], inplace=True)
 
 dfDespesaAgrupada = gastosSenador.groupby('TIPO_DESPESA')[['VALOR_REEMBOLSADO']].sum().sort_values('VALOR_REEMBOLSADO', ascending=False).reset_index()
 
-dfAgrupadoPorSenador['VALOR_REEMBOLSADO'] = dfAgrupadoPorSenador['VALOR_REEMBOLSADO'].map(lambda x: locale.currency(x, grouping=True))
-
 dfGastosAno = gastosSenador.groupby('ANO')[['VALOR_REEMBOLSADO']].sum().reset_index()
 
 # dfAgrupadoFornecedor = df.groupby('FORNECEDOR')[['VALOR_REEMBOLSADO']].sum().reset_index()
