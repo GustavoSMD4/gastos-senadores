@@ -45,13 +45,11 @@ else:
 
         with col2:
             with st.container(border=False):
-                col3, col4 = st.columns([5, 1])
-                with col3:
-                    st.metric('Nome Completo', senadorDadosPessoais['NomeCompletoParlamentar'])
-                    st.metric('Email', senadorDadosPessoais['EmailParlamentar'])
-                with col4:
-                    st.metric('Partido', senadorDadosPessoais['SiglaPartidoParlamentar'])
-                    st.metric('Estado', senadorDadosPessoais['UfParlamentar'])
+                
+                st.metric('Nome Completo', senadorDadosPessoais['NomeCompletoParlamentar'])
+                col3, col4 = st.columns(2)
+                col3.metric('Partido', senadorDadosPessoais['SiglaPartidoParlamentar'])
+                col4.metric('Estado', senadorDadosPessoais['UfParlamentar'])
 
     if len(senadorSelecionadoGastos) <= 0:
         st.warning('Não foram encontrado gastos para esse senador')
