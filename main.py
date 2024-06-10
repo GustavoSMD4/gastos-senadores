@@ -75,9 +75,11 @@ else:
         figBarDespesas = px.bar(senadorSelecionadoGastosPorDespesa, x='Tipo', y='VALOR_REEMBOLSADO',
                                 text='Valor', title='Gastos Agrupados por tipo de despesa')
         
-        st.plotly_chart(figBarDespesas, use_container_width=True)
+        colGraph, colTable = st.columns(2)
+        colGraph.plotly_chart(figBarDespesas, use_container_width=True)
         
-        # ui.table(senadorSelecionadoGastosPorDespesa[['TIPO_DESPESA', 'Valor']])
+        with colTable:
+            ui.table(senadorSelecionadoGastosPorDespesa[['TIPO_DESPESA', 'Valor']])
         
         # st.dataframe(senadorSelecionadoGastos)
 
