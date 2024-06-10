@@ -20,8 +20,29 @@ if 'senadoresGastos' not in st.session_state:
     
 senadores: pd.DataFrame = st.session_state['senadores']
 
-options = list(senadores['NomeParlamentar'].str.upper().unique())
-senadorSelecionado = st.sidebar.selectbox('Selecionar Senador', options=options)
+optionsEstado = ['TODOS'] + list(senadores['UfParlamentar'].unique())
+optionsPartido = ['TODOS'] + list(senadores['SiglaPartidoParlamentar'].unique())
+optionsSenadores = list(senadores['NomeParlamentar'].str.upper().unique())
+
+estadoSenador = st.sidebar.selectbox('Estado', optionsEstado)
+
+if estadoSenador != 'TODOS':
+    partidosNoEstado = senadores[senadores['UfParlamentar'] == estadoSenador]
+    optionsPartido = ['TODOS'] + list(partidosNoEstado['SiglaPartidoParlamentar'].unique())
+    
+    senadoresSelecionar = senadores[senadores['UfParlamentar'] == estadoSenador]
+    
+    optionsSenadores = senadoresSelecionar['NomeParlamentar'].str.upper()
+    
+partido = st.sidebar.selectbox('Partido', optionsPartido)
+
+if partido != 'TODOS':
+    senadoresNoPartido = senadores[(senadores['SiglaPartidoParlamentar'] == partido)
+                                   & (senadores['UfParlamentar'] == estadoSenador)]
+
+    optionsSenadores = senadoresNoPartido['NomeParlamentar'].str.upper()
+
+senadorSelecionado = st.sidebar.selectbox('Selecionar Senador', options=optionsSenadores)
 
 if senadorSelecionado != '':
     handleChangeSenador(senadorSelecionado)
