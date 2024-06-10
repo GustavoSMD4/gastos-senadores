@@ -32,29 +32,14 @@ def getSenadores():
     return data
     
 def getDadosPessoaisSenador(senador: str):
-    response = requests.get('https://legis.senado.leg.br/dadosabertos/senador/lista/atual')
-
-    root = ET.fromstring(response.text)
-
-    # Extract the data
-    senadores = []
-    for parlamentar in root.findall('.//Parlamentar'):
-        identificacao = parlamentar.find('IdentificacaoParlamentar')
-        mandato = parlamentar.find('Mandato')
-
-        senadores.append({
-            'NomeParlamentar': identificacao.find('NomeParlamentar').text,
-            'NomeCompletoParlamentar': identificacao.find('NomeCompletoParlamentar').text,
-            'UrlFotoParlamentar': identificacao.find('UrlFotoParlamentar').text,
-            'EmailParlamentar': identificacao.find('EmailParlamentar').text,
-            'NumeroTelefone': identificacao.find('.//Telefone/NumeroTelefone').text,
-            'SiglaPartidoParlamentar': identificacao.find('SiglaPartidoParlamentar').text,
-            'UfParlamentar': identificacao.find('UfParlamentar').text,
-            'DescricaoParticipacao': mandato.find('DescricaoParticipacao').text,
-        })
-
-    senadorDados = next((sen for sen in senadores if sen['NomeParlamentar'].upper() == senador))
-    st.session_state['senadorDadosPessoais'] = senadorDados
+    senadores = st.session_state['senadores']
+    senadorDados = senadores[senadores['NomeParlamentar'].str.upper() == senador]
+    
+    if len(senadorDados) <= 0:
+        raise Exception('Dados não encontrados')
+    
+    # senadorDados = next((sen for sen in senadores if sen['NomeParlamentar'].upper() == senador))
+    st.session_state['senadorDadosPessoais'] = senadorDados.iloc[0]
     
     return senadorDados
     
