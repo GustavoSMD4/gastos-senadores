@@ -72,14 +72,9 @@ else:
         senadorSelecionadoGastosPorDespesa['Valor'] = senadorSelecionadoGastosPorDespesa['VALOR_REEMBOLSADO'].apply(lambda x: F"R${x:,.2f}")
         senadorSelecionadoGastosPorDespesa['Tipo'] = senadorSelecionadoGastosPorDespesa['TIPO_DESPESA'].str[0:10]
         
-        figBarDespesas = px.bar(senadorSelecionadoGastosPorDespesa, x='Tipo', y='VALOR_REEMBOLSADO',
-                                text='Valor', title='Gastos Agrupados por tipo de despesa')
-        
-        colGraph, colTable = st.columns(2)
-        colGraph.plotly_chart(figBarDespesas, use_container_width=True)
-        
-        with colTable:
-            ui.table(senadorSelecionadoGastosPorDespesa[['TIPO_DESPESA', 'Valor']])
+        with st.expander('Despesas agrupadas por tipo.'):
+            senadorDisplay = senadorSelecionadoGastosPorDespesa.sort_values('VALOR_REEMBOLSADO', ascending=False)
+            ui.table(senadorDisplay[['TIPO_DESPESA', 'Valor']])
         
         # st.dataframe(senadorSelecionadoGastos)
 
