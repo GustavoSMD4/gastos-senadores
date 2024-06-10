@@ -34,13 +34,12 @@ senadorSelecionadoGastos = senadoresGastos[senadoresGastos['SENADOR'] == senador
 if senadorSelecionadoGastos is None:
     raise Exception('Não foram encontrados gastos para esse senador.')
 
-st.header(F'Senador {senadorSelecionado}')
-
 if senadorDadosPessoais is None:
     st.warning('Não foi possível encontrar dados para o senador na API do governo.')
     
 else:
     with st.container(border=True):
+        st.header(F'Senador {senadorSelecionado}')
         col1, col2 = st.columns([1, 2.5])
         col1.image(senadorDadosPessoais['UrlFotoParlamentar'], width=200)  
 
@@ -80,9 +79,9 @@ else:
         
         st.plotly_chart(figBarDespesas, use_container_width=True)
         
-        ui.table(senadorSelecionadoGastosPorDespesa[['TIPO_DESPESA', 'Valor']])
+        # ui.table(senadorSelecionadoGastosPorDespesa[['TIPO_DESPESA', 'Valor']])
         
-        st.dataframe(senadorSelecionadoGastos)
+        # st.dataframe(senadorSelecionadoGastos)
 
 
 # senadorDados = st.session_state['senadorDados']
