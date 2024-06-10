@@ -1,3 +1,4 @@
 streamlit
 pandas
 plotly_express
+streamlit_shadcn_ui
