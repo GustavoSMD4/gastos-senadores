@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import streamlit_shadcn_ui as ui
 import plotly_express as px
 from buscarDados import getSenadores, getDadosPessoaisSenador, getGastosSenadores
 
@@ -26,32 +27,62 @@ if senadorSelecionado != '':
     handleChangeSenador(senadorSelecionado)
 
 senadorDadosPessoais: pd.DataFrame = st.session_state['senadorDadosPessoais']
-senadoresGastos = pd.DataFrame = st.session_state['senadoresGastos']
+senadoresGastos = pd.DataFrame(st.session_state['senadoresGastos'])
 
-dfGastosSenadores = senadoresGastos[senadoresGastos['SENADOR'] == senadorSelecionado]
+senadorSelecionadoGastos = senadoresGastos[senadoresGastos['SENADOR'] == senadorSelecionado]
 
-st.header(F'Dados Senador {senadorSelecionado}')
+if senadorSelecionadoGastos is None:
+    raise Exception('Não foram encontrados gastos para esse senador.')
+
+st.header(F'Senador {senadorSelecionado}')
 
 if senadorDadosPessoais is None:
     st.warning('Não foi possível encontrar dados para o senador na API do governo.')
     
-else: 
-    col1, col2 = st.columns([1, 3])
-    col1.image(senadorDadosPessoais['UrlFotoParlamentar'].iloc[0], width=200)  
-    
-    with col2:
-        with st.container(border=False):
-            col3, col4 = st.columns(2)
-            with col3:
-                st.info(F"Nome: {senadorDadosPessoais['NomeCompletoParlamentar'].iloc[0]}")
-                st.info(F"Email: {senadorDadosPessoais['EmailParlamentar'].iloc[0]}")
-            with col4:
-                st.info(F"Partido: {senadorDadosPessoais['SiglaPartidoParlamentar'].iloc[0]}")
-                st.info(F"Estado: {senadorDadosPessoais['UfParlamentar'].iloc[0]}")
-            
-    st.write(senadorDadosPessoais)
-    
-    st.dataframe(dfGastosSenadores)
+else:
+    with st.container(border=True):
+        col1, col2 = st.columns([1, 2.5])
+        col1.image(senadorDadosPessoais['UrlFotoParlamentar'], width=200)  
+
+        with col2:
+            with st.container(border=False):
+                col3, col4 = st.columns([5, 1])
+                with col3:
+                    st.metric('Nome Completo', senadorDadosPessoais['NomeCompletoParlamentar'])
+                    st.metric('Email', senadorDadosPessoais['EmailParlamentar'])
+                with col4:
+                    st.metric('Partido', senadorDadosPessoais['SiglaPartidoParlamentar'])
+                    st.metric('Estado', senadorDadosPessoais['UfParlamentar'])
+
+    if len(senadorSelecionadoGastos) <= 0:
+        st.warning('Não foram encontrado gastos para esse senador')
+        
+    else:
+        
+        senadorSelecionadoGastos['VALOR_REEMBOLSADO'] = senadorSelecionadoGastos['VALOR_REEMBOLSADO'].apply(lambda x: x.replace(',', ''))
+        senadorSelecionadoGastos['VALOR_REEMBOLSADO'] = pd.to_numeric(senadorSelecionadoGastos['VALOR_REEMBOLSADO'])
+        gastosAgrupadosAno = senadorSelecionadoGastos.groupby('ANO', as_index=False)[['VALOR_REEMBOLSADO']].sum()
+        gastosAgrupadosAno['Valor'] = gastosAgrupadosAno['VALOR_REEMBOLSADO'].apply(lambda x: F"R${x:,.2f}")
+
+        
+        figLineGastosAno = px.line(gastosAgrupadosAno, x='ANO', y='VALOR_REEMBOLSADO',
+                                   title='Gastos do Senador ao longo dos anos', text='Valor')
+        
+        figLineGastosAno.update_traces(textposition='top center')
+        st.plotly_chart(figLineGastosAno, use_container_width=True)
+        
+        senadorSelecionadoGastosPorDespesa = senadorSelecionadoGastos.groupby('TIPO_DESPESA', as_index=False)[['VALOR_REEMBOLSADO']].sum()
+        senadorSelecionadoGastosPorDespesa['Valor'] = senadorSelecionadoGastosPorDespesa['VALOR_REEMBOLSADO'].apply(lambda x: F"R${x:,.2f}")
+        senadorSelecionadoGastosPorDespesa['Tipo'] = senadorSelecionadoGastosPorDespesa['TIPO_DESPESA'].str[0:20]
+        
+        figBarDespesas = px.bar(senadorSelecionadoGastosPorDespesa, x='Tipo', y='VALOR_REEMBOLSADO',
+                                text='Valor', title='Gastos Agrupados por tipo de despesa')
+        
+        st.plotly_chart(figBarDespesas, use_container_width=True)
+        
+        ui.table(senadorSelecionadoGastosPorDespesa[['TIPO_DESPESA', 'Valor']])
+        
+        st.dataframe(senadorSelecionadoGastos)
 
 
 # senadorDados = st.session_state['senadorDados']
