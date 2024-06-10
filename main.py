@@ -72,7 +72,7 @@ else:
         
         senadorSelecionadoGastosPorDespesa = senadorSelecionadoGastos.groupby('TIPO_DESPESA', as_index=False)[['VALOR_REEMBOLSADO']].sum()
         senadorSelecionadoGastosPorDespesa['Valor'] = senadorSelecionadoGastosPorDespesa['VALOR_REEMBOLSADO'].apply(lambda x: F"R${x:,.2f}")
-        senadorSelecionadoGastosPorDespesa['Tipo'] = senadorSelecionadoGastosPorDespesa['TIPO_DESPESA'].str[0:20]
+        senadorSelecionadoGastosPorDespesa['Tipo'] = senadorSelecionadoGastosPorDespesa['TIPO_DESPESA'].str[0:30]
         
         figBarDespesas = px.bar(senadorSelecionadoGastosPorDespesa, x='Tipo', y='VALOR_REEMBOLSADO',
                                 text='Valor', title='Gastos Agrupados por tipo de despesa')
