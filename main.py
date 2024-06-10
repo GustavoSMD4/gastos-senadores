@@ -43,10 +43,15 @@ if estadoSenador != 'TODOS':
 partido = st.sidebar.selectbox('Partido', optionsPartido)
 
 if partido != 'TODOS':
-    senadoresNoPartido = senadores[(senadores['SiglaPartidoParlamentar'] == partido)
-                                   & (senadores['UfParlamentar'] == estadoSenador)]
-
-    optionsSenadores = senadoresNoPartido['NomeParlamentar'].str.upper()
+    
+    if estadoSenador != 'TODOS':
+        senadoresNoPartido = senadores[(senadores['SiglaPartidoParlamentar'] == partido)
+                                        & (senadores['UfParlamentar'] == estadoSenador)]
+        optionsSenadores = senadoresNoPartido['NomeParlamentar'].str.upper()
+    else:
+        senadoresNoPartido = senadores[senadores['SiglaPartidoParlamentar'] == partido]
+        optionsSenadores = senadoresNoPartido['NomeParlamentar'].str.upper()
+        
 
 senadorSelecionado = st.sidebar.selectbox('Selecionar Senador', options=optionsSenadores)
 
