@@ -21,6 +21,7 @@ def getSenadores():
             'NomeCompletoParlamentar': identificacao.find('NomeCompletoParlamentar').text,
             'UrlFotoParlamentar': identificacao.find('UrlFotoParlamentar').text,
             'EmailParlamentar': identificacao.find('EmailParlamentar').text,
+            'FormaTratamento': identificacao.find('FormaTratamento').text,
             'NumeroTelefone': identificacao.find('.//Telefone/NumeroTelefone').text,
             'SiglaPartidoParlamentar': identificacao.find('SiglaPartidoParlamentar').text,
             'UfParlamentar': identificacao.find('UfParlamentar').text,

@@ -53,7 +53,7 @@ if partido != 'TODOS':
         optionsSenadores = senadoresNoPartido['NomeParlamentar'].str.upper()
         
 
-senadorSelecionado = st.sidebar.selectbox('Selecionar Senador', options=optionsSenadores)
+senadorSelecionado = st.sidebar.selectbox('Selecionar Senador(a)', options=optionsSenadores)
 
 if senadorSelecionado != '':
     handleChangeSenador(senadorSelecionado)
@@ -71,7 +71,7 @@ if senadorDadosPessoais is None:
     
 else:
     with st.container(border=True):
-        st.header(F'Senador {senadorSelecionado}')
+        st.header(F"{senadorDadosPessoais['FormaTratamento']} {senadorSelecionado}")
         col1, col2 = st.columns([1, 2.5])
         col1.image(senadorDadosPessoais['UrlFotoParlamentar'], width=200)  
 
@@ -84,7 +84,7 @@ else:
                 col4.metric('Estado', senadorDadosPessoais['UfParlamentar'])
 
     if len(senadorSelecionadoGastos) <= 0:
-        st.warning('Não foram encontrado gastos para esse senador')
+        st.warning('Não foram encontrado gastos para esse parlamentar')
         
     else:
         
