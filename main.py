@@ -10,6 +10,20 @@ def handleChangeSenador(senador):
 
 st.set_page_config(layout='wide')
 
+st.markdown(
+        """
+            <style>
+                .appview-container .main .block-container {{
+                    padding-top: {padding_top}rem;
+                    padding-bottom: {padding_bottom}rem;
+                    }}
+
+            </style>""".format(
+            padding_top=3, padding_bottom=1
+        ),
+        unsafe_allow_html=True,
+    )
+
 show_pages([
     Page('main.py', 'Senadores', '👨‍💼'),
     Page('partidos.py', 'Partidos', '🤝')
@@ -96,6 +110,29 @@ else:
         
         figLineGastosAno = px.line(gastosAgrupadosAno, x='ANO', y='VALOR_REEMBOLSADO',
                                    title='Gastos do Senador ao longo dos anos', text='Valor')
+        
+        st.header(F"Gastos do {senadorDadosPessoais['FormaTratamento']}")
+        
+        col1, col2, col3 = st.columns(3)
+        col4, col5, col6 = st.columns(3)
+        
+        totalGasto = gastosAgrupadosAno["VALOR_REEMBOLSADO"].sum()
+        mediaAnual = totalGasto/len(gastosAgrupadosAno)
+        mediaMensal = mediaAnual/12
+        
+        anoMaisGastouIndex = gastosAgrupadosAno["VALOR_REEMBOLSADO"].idxmax()
+        anoMaisGastou = gastosAgrupadosAno.iloc[anoMaisGastouIndex]
+        anoMax = anoMaisGastou["ANO"]
+        valorMax = anoMaisGastou["VALOR_REEMBOLSADO"]
+        mediaMensalMax = valorMax/12
+        
+        col1.info(F"Total gasto: R${totalGasto:,.2f}")
+        col2.info(F"Média anual: R${mediaAnual:,.2f}")
+        col3.info(F"Média mensal: R${mediaMensal:,.2f}")
+        
+        col4.info(F"Ano mais gastos: {anoMax}")
+        col5.info(F"Valor ano {anoMax}: R${valorMax:,.2f}")
+        col6.info(F"Média mensal {anoMax}: R${mediaMensalMax:,.2f}")
         
         figLineGastosAno.update_traces(textposition='top center')
         st.plotly_chart(figLineGastosAno, use_container_width=True)
