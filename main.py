@@ -111,7 +111,7 @@ else:
         figLineGastosAno = px.line(gastosAgrupadosAno, x='ANO', y='VALOR_REEMBOLSADO',
                                    title='Gastos do Senador ao longo dos anos', text='Valor')
         
-        st.header(F"Gastos do {senadorDadosPessoais['FormaTratamento']}")
+        st.header(F"Gastos")
         
         col1, col2, col3 = st.columns(3)
         col4, col5, col6 = st.columns(3)
